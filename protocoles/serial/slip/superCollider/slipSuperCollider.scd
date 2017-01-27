@@ -1,4 +1,8 @@
 // La classe SLIPSerial doit être installée dans le dossier Extensions de SC
+// Vous pouvez demander à SuperCollider où se trouve le dossier Extension sur votre système en évaluant:
+Platform.userExtensionDir;
+// Rebootez SuperCollider apès avoir ajouté le fichier au dossier
+
 SLIPSerial.listDevices; // Lister les périphériques série.
 
 
