@@ -1,0 +1,22 @@
+#N canvas 138 178 483 388 10;
+#X obj 77 63 OSCrx 13000;
+#X obj 77 112 expr (($f1 - 1000000)/10000000);
+#X obj 77 151 vsl 15 128 0 1 0 0 empty empty empty 0 -9 0 10 -262144
+-1 -1 0 1;
+#X floatatom 77 293 5 0 0 0 - - -;
+#X obj 77 89 route /mvt /trig;
+#X obj 194 273 p;
+#X obj 194 222 route 0;
+#X obj 194 244 route 1;
+#X obj 194 194 spigot;
+#X obj 227 170 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 1
+1;
+#X connect 0 0 4 0;
+#X connect 1 0 2 0;
+#X connect 2 0 3 0;
+#X connect 4 0 1 0;
+#X connect 4 1 8 0;
+#X connect 6 0 7 0;
+#X connect 7 0 5 0;
+#X connect 8 0 6 0;
+#X connect 9 0 8 1;

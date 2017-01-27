@@ -1,0 +1,53 @@
+#N canvas 532 178 1362 700 10;
+#X obj 37 37 import mrpeach;
+#X obj 39 239 unpack f f f f;
+#X obj 23 288 << 8;
+#X obj 51 331 |;
+#X floatatom 51 420 5 0 0 0 - - -, f 5;
+#X obj 93 290 << 8;
+#X obj 105 331 |;
+#X floatatom 105 420 5 0 0 0 - - -, f 5;
+#X text 243 132 115200 est le baud rate. Vous pourriez avoir à le
+changer également.;
+#X text 160 179 Décode les paquets SLIP et forme des listes. (Merci
+Monsieur Pêche!);
+#X text 150 287 << 8 décale les bits vers la gauche de 8 positions.
+;
+#X text 152 299 11 deviendra 1.1e+09 \, par exemple.;
+#X text 160 329 | est l'oérateur OU bit à bit.;
+#X text 183 371 768;
+#X text 243 371 |;
+#X text 271 372 255;
+#X text 329 372 =;
+#X text 373 373 1023;
+#X text 164 234 Les octets arrivent dans cet ordre:;
+#X text 164 245 MSB sensorA \, LSB sensorA \, MSB sensorB \, LSB sensorB
+;
+#X text 238 90 Ouvrir une connexion série. Le nom du port série utilisé
+sera sans doute différent pour vous. Remplacez /dev/ttyACM0 par le
+nom du port série que vous utilisez.;
+#X text 186 352 par exemple:;
+#X text 383 329 Il effectue un OU logique sur chacun des bits du nombre.
+;
+#X obj 39 175 mrpeach/slipdec;
+#X msg 581 37 devices;
+#X text 154 35 Importer les objets de Monsieur Pêche. (PD-extended
+seulement).;
+#X text 645 39 Obtenir la liste des ports usb.;
+#X msg 916 41 close;
+#X text 964 42 Fermer le port.;
+#X text 164 257 Il faut combiner les LSB et les MSB pour obtenir les
+valeurs 10 bits.;
+#X obj 39 94 comport 4 115200;
+#X connect 1 0 2 0;
+#X connect 1 1 3 1;
+#X connect 1 2 5 0;
+#X connect 1 3 6 1;
+#X connect 2 0 3 0;
+#X connect 3 0 4 0;
+#X connect 5 0 6 0;
+#X connect 6 0 7 0;
+#X connect 23 0 1 0;
+#X connect 24 0 30 0;
+#X connect 27 0 30 0;
+#X connect 30 0 23 0;

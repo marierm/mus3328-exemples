@@ -1,0 +1,65 @@
+#N canvas 668 50 598 449 10;
+#X declare -lib mrpeach;
+#X msg 185 329 \; pd dsp 1 \;;
+#X obj 25 346 dac~ 1;
+#X obj 26 289 *~;
+#X text 73 345 sortie audio;
+#X obj 27 244 osc~ 240;
+#X obj 40 270 nbx 5 14 0 1 0 0 empty empty empty 0 -8 0 10 -262144
+-1 -1 0.75 256;
+#X obj 27 174 nbx 5 14 -1e+37 1e+37 0 0 empty empty empty 0 -8 0 10
+-262144 -1 -1 0 256;
+#X obj 25 221 line~;
+#X msg 27 199 \$1 100;
+#X obj 138 290 *~;
+#X obj 139 245 osc~ 240;
+#X obj 152 271 nbx 5 14 0 1 0 0 empty empty empty 0 -8 0 10 -262144
+-1 -1 0 256;
+#X obj 139 175 nbx 5 14 -1e+37 1e+37 0 0 empty empty empty 0 -8 0 10
+-262144 -1 -1 0 256;
+#X obj 137 222 line~;
+#X msg 139 200 \$1 100;
+#X obj 250 288 *~;
+#X obj 251 243 osc~ 240;
+#X obj 264 269 nbx 5 14 0 1 0 0 empty empty empty 0 -8 0 10 -262144
+-1 -1 0 256;
+#X obj 251 173 nbx 5 14 -1e+37 1e+37 0 0 empty empty empty 0 -8 0 10
+-262144 -1 -1 0 256;
+#X obj 249 220 line~;
+#X msg 251 198 \$1 100;
+#X obj 308 28 import mrpeach;
+#X obj 26 30 udpreceive 9000;
+#X obj 26 54 unpackOSC;
+#X obj 26 116 routeOSC /pitch /amp;
+#X obj 166 116 routeOSC /pitch /amp;
+#X obj 306 116 routeOSC /pitch /amp;
+#X obj 26 81 routeOSC /tone1 /tone2 /tone3;
+#X connect 2 0 1 0;
+#X connect 4 0 2 0;
+#X connect 5 0 2 1;
+#X connect 6 0 8 0;
+#X connect 7 0 4 0;
+#X connect 8 0 7 0;
+#X connect 9 0 1 0;
+#X connect 10 0 9 0;
+#X connect 11 0 9 1;
+#X connect 12 0 14 0;
+#X connect 13 0 10 0;
+#X connect 14 0 13 0;
+#X connect 15 0 1 0;
+#X connect 16 0 15 0;
+#X connect 17 0 15 1;
+#X connect 18 0 20 0;
+#X connect 19 0 16 0;
+#X connect 20 0 19 0;
+#X connect 22 0 23 0;
+#X connect 23 0 27 0;
+#X connect 24 0 6 0;
+#X connect 24 1 5 0;
+#X connect 25 0 12 0;
+#X connect 25 1 11 0;
+#X connect 26 0 18 0;
+#X connect 26 1 17 0;
+#X connect 27 0 24 0;
+#X connect 27 1 25 0;
+#X connect 27 2 26 0;
