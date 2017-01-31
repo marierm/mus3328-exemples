@@ -1,8 +1,9 @@
 
+SerialPort.listDevices;
 (
 p = SerialPort(
-	"/dev/ttyUSB0",    //edit to match your port. SerialPort.listDevices
-	baudrate: 9600    //check that baudrate is the same as in arduino sketch
+	"/dev/tty.usbmodem1411",    //edit to match your port. SerialPort.listDevices
+	baudrate: 115200    //check that baudrate is the same as in arduino sketch
 );
 )
 
@@ -16,7 +17,7 @@ r = Routine({
 			str = str ++ byte.asAscii;
 		},{
 			res = str.split($ ).asInt;
-			// do something 
+			// do something
 			res.postln;
 			str = "";
 		});

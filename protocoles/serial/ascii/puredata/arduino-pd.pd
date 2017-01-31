@@ -1,4 +1,4 @@
-#N canvas 913 87 493 481 10;
+#N canvas 695 139 527 654 10;
 #N canvas 899 268 569 498 fromDuino 0;
 #X obj -381 85 select 13 10 33;
 #X obj -293 148 list prepend;
@@ -37,27 +37,58 @@
 #X connect 17 0 16 0;
 #X connect 18 0 9 0;
 #X restore 113 243 pd fromDuino;
-#X obj 113 189 convert/pd2ascii CR;
 #X msg 31 220 close;
-#X obj 113 272 print;
-#X floatatom 92 128 5 0 0 0 - - -;
-#X floatatom 135 127 5 0 0 0 - - -;
+#X obj 35 295 print;
 #X msg 31 193 devices;
-#X obj 94 160 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
--1;
-#X obj 113 160 pack;
-#X floatatom 237 140 5 0 0 0 - - -;
-#X msg 226 274 open 2;
-#X obj 113 217 comport 2 9600;
-#X connect 0 0 3 0;
-#X connect 1 0 11 0;
-#X connect 2 0 11 0;
-#X connect 4 0 8 0;
-#X connect 5 0 7 0;
-#X connect 5 0 8 1;
-#X connect 6 0 11 0;
-#X connect 7 0 8 0;
-#X connect 8 0 1 0;
-#X connect 9 0 1 0;
-#X connect 10 0 11 0;
-#X connect 11 0 0 0;
+#X msg 31 246 open 1;
+#X obj 113 268 unpack 0 0;
+#X obj 125 310 - 1023;
+#X obj 129 350 abs;
+#X obj 173 310 >> 2;
+#X obj 267 279 vsl 15 128 0 1023 0 0 empty empty empty 0 -9 0 10 -262144
+-1 -1 2731 1;
+#X obj 290 279 vsl 15 128 0 1023 0 0 empty empty empty 0 -9 0 10 -262144
+-1 -1 9969 1;
+#X obj 314 279 vsl 15 128 0 1023 0 0 empty empty empty 0 -9 0 10 -262144
+-1 -1 0 1;
+#X obj 234 163 receive toduino;
+#X msg 112 131 print 24 450 200 \, 13;
+#X msg 233 188 print \$1 \$2 \$3 \, 13;
+#X obj 434 75 vsl 15 128 0 1023 0 0 empty empty empty 0 -9 0 10 -262144
+-1 -1 9600 1;
+#X obj 457 75 vsl 15 128 0 1023 0 0 empty empty empty 0 -9 0 10 -262144
+-1 -1 0 1;
+#X obj 481 75 vsl 15 128 0 1023 0 0 empty empty empty 0 -9 0 10 -262144
+-1 -1 900 1;
+#X obj 440 308 send toduino;
+#X obj 440 282 pack 0 0 0;
+#X obj 113 217 comport 1 9600;
+#X obj 419 256 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X obj 434 216 int;
+#X obj 459 216 int;
+#X obj 484 215 int;
+#X connect 0 0 5 0;
+#X connect 1 0 20 0;
+#X connect 3 0 20 0;
+#X connect 4 0 20 0;
+#X connect 5 0 6 0;
+#X connect 5 0 9 0;
+#X connect 5 1 8 0;
+#X connect 6 0 7 0;
+#X connect 7 0 10 0;
+#X connect 8 0 11 0;
+#X connect 12 0 14 0;
+#X connect 13 0 20 0;
+#X connect 14 0 20 0;
+#X connect 15 0 22 0;
+#X connect 16 0 21 0;
+#X connect 16 0 23 0;
+#X connect 17 0 21 0;
+#X connect 17 0 24 0;
+#X connect 19 0 18 0;
+#X connect 20 0 0 0;
+#X connect 21 0 19 0;
+#X connect 22 0 19 0;
+#X connect 23 0 19 1;
+#X connect 24 0 19 2;
