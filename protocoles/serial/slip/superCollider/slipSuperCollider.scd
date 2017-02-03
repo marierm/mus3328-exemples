@@ -10,7 +10,6 @@ SLIPSerial.listDevices; // Lister les périphériques série.
 (
 ~port = SLIPSerial("/dev/ttyACM0",115200); // Changer le nom du port
 										   // et le baudrate au besoin.
-~inc = 0; // Un compteur
 
 // La fonction passée en paramètre à readSLIP est executée à chaque
 // paquet SLIP reçu.
@@ -18,11 +17,7 @@ SLIPSerial.listDevices; // Lister les périphériques série.
 	var val;
 	val = ((i[0] << 8) | i[1])  >> 2;
 	(val.asInteger ! 3).postln;
-	((~inc % 10) == 0).if({ // On renvoie un message SLIP une fois sur 10.
-		~port.writeSLIP( val.asInteger ! 3 );
-		// writeSLIP écrit les octets sur le port série.
-	});
-	~inc = ~inc + 1;
+	~port.writeSLIP( val.asInteger ! 3 );
 });
 )
 
