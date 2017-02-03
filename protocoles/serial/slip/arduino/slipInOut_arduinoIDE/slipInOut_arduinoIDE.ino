@@ -18,12 +18,16 @@ int packetIndex = 0;  // L'index du paquet SLIP reçu.  Cette valeur sera
 
 // Deux témoins (flags)
 boolean escape = false; // Ce témoin devient vrai quand un octet ESC
-      // est reçu.  Il redevient faux quand l'octet
-      // suivant (ESC_ESC ou ESC_END) est reçu.
+			// est reçu.  Il redevient faux quand l'octet
+			// suivant (ESC_ESC ou ESC_END) est reçu.
 boolean packetComplete = false; // Ce témoin devient vrai quand un
-        // paquet SLIP est complet,
-        // c'est-à-dire quand l'octet END est
-        // reçu.
+				// paquet SLIP est complet,
+				// c'est-à-dire quand l'octet END est
+				// reçu.
+
+unsigned long previousMillis = 0;
+const long interval = 3;
+
 void setup() {
   Serial.begin(115200);
   for( uint i=0 ; i < (sizeof(outPins)/sizeof(int)) ; i++) {
@@ -32,15 +36,16 @@ void setup() {
 }
 
 void loop() {
+  // Réception des paquets SLIP
   int sensor = 0;
-      // Réception des paquets SLIP
+  unsigned long currentMillis = millis();
   while (Serial.available()) {
     byte b = Serial.read();  // On lit un premier octet.
     if (escape) { // Si l'octet précédent étant ESC (219)
       if (b == ESC_END) {  // On ajoute END (192)...
-        slipPacket[packetIndex] = END;
+	slipPacket[packetIndex] = END;
       } else if (b == ESC_ESC) { // ...ou ESC (219)
-        slipPacket[packetIndex] = ESC;
+	  slipPacket[packetIndex] = ESC;
       }
       packetIndex++;  
       escape = false; // On remet le témoin escape à faux.
@@ -54,12 +59,16 @@ void loop() {
     }
   }
 
-  if (packetComplete) { // On vérifie si le paquet SLIP est complet.
-    for (int i=0; i < packetIndex; i++) { 
-      analogWrite(outPins[i], slipPacket[i]);
+  if (currentMillis - previousMillis >= interval) {
+    // save the last time you blinked the LED
+    previousMillis = currentMillis;
+    if (packetComplete) { // On vérifie si le paquet SLIP est complet.
+      for (int i=0; i < packetIndex; i++) { 
+	analogWrite(outPins[i], slipPacket[i]);
+      }
+      packetComplete = false;
+      packetIndex = 0;
     }
-    packetComplete = false;
-    packetIndex = 0;
   }
 
   // On lit le capteur et on envoie un paquet SLIP.
@@ -70,9 +79,7 @@ void loop() {
   Serial.write(END);   // On finit le paquet.
 }
 
-// void SLIPSerialRead(){
 
-// }
 
 void SLIPSerialWrite(int value){
   if(value == END) { 
@@ -88,4 +95,3 @@ void SLIPSerialWrite(int value){
     return;
   }
 }
-
