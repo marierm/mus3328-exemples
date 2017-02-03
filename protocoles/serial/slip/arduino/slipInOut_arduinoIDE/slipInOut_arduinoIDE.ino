@@ -59,24 +59,24 @@ void loop() {
     }
   }
 
-  if (currentMillis - previousMillis >= interval) {
-    // save the last time you blinked the LED
-    previousMillis = currentMillis;
-    if (packetComplete) { // On vérifie si le paquet SLIP est complet.
-      for (int i=0; i < packetIndex; i++) { 
-	analogWrite(outPins[i], slipPacket[i]);
-      }
-      packetComplete = false;
-      packetIndex = 0;
+  if (packetComplete) { // On vérifie si le paquet SLIP est complet.
+    for (int i=0; i < packetIndex; i++) { 
+      analogWrite(outPins[i], slipPacket[i]);
     }
+    packetComplete = false;
+    packetIndex = 0;
   }
 
-  // On lit le capteur et on envoie un paquet SLIP.
-  sensor = analogRead(sensorPin);
-  Serial.write(END);   // On commence le paquet.
-  SLIPSerialWrite(sensor >> 8);
-  SLIPSerialWrite(sensor & 255);
-  Serial.write(END);   // On finit le paquet.
+  if (currentMillis - previousMillis >= interval) {
+    previousMillis = currentMillis;
+
+    // On lit le capteur et on envoie un paquet SLIP.
+    sensor = analogRead(sensorPin);
+    Serial.write(END);   // On commence le paquet.
+    SLIPSerialWrite(sensor >> 8);
+    SLIPSerialWrite(sensor & 255);
+    Serial.write(END);   // On finit le paquet.
+  }
 }
 
 
