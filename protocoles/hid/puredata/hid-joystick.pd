@@ -1,0 +1,125 @@
+#N canvas 421 26 838 565 10;
+#X declare -lib mrpeach;
+#X obj 42 36 tgl 35 0 empty empty empty 0 -6 0 8 -24198 -1 -1 0 25
+;
+#X msg 61 100 open 8;
+#N canvas 162 133 570 420 serin 0;
+#X obj 286 61 cnv 15 30 15 empty \$0-open-canvas 8 4 8 0 14 -233017
+-1 0;
+#X obj 60 61 hradio 15 1 1 15 empty empty empty 0 -6 0 8 -225271 -1
+-1 8;
+#X obj 60 13 inlet;
+#X msg 200 202 label \$1;
+#X obj 200 180 makefilename %d;
+#X obj 59 108 int;
+#X obj 59 337 outlet;
+#X msg 201 306 set \$1 \$2;
+#X obj 59 266 trigger bang anything;
+#X obj 201 286 list;
+#X msg 60 210 open \$1;
+#X obj 200 225 send \$0-open-canvas;
+#X connect 1 0 5 0;
+#X connect 2 0 1 0;
+#X connect 3 0 11 0;
+#X connect 4 0 3 0;
+#X connect 5 0 4 0;
+#X connect 5 0 10 0;
+#X connect 7 0 6 0;
+#X connect 8 0 6 0;
+#X connect 8 1 9 0;
+#X connect 9 0 7 0;
+#X connect 10 0 8 0;
+#X coords 0 -1 1 1 257 17 1 60 60;
+#X restore 61 78 pd serin;
+#X msg 78 123 info;
+#X obj 62 162 hid;
+#X msg 129 121 close;
+#X msg 129 100 refresh;
+#X msg 129 142 print;
+#X text 172 141 <------;
+#X floatatom 125 229 6 0 0 0 - - -;
+#X obj 64 184 route key rel abs syn;
+#X obj 20 347 tgl 25 0 empty empty empty 0 -6 0 8 -195568 -1 -1 0 1
+;
+#X obj 125 208 route abs_x abs_y abs_z abs_rx abs_ry abs_rz abs_throttle
+;
+#X floatatom 175 229 6 0 0 0 - - -;
+#X floatatom 225 229 6 0 0 0 - - -;
+#X obj 96 347 tgl 25 0 empty empty empty 0 -6 0 8 -195568 -1 -1 0 1
+;
+#X obj 170 347 tgl 25 0 empty empty empty 0 -6 0 8 -195568 -1 -1 0
+1;
+#X obj 237 351 tgl 25 0 empty empty empty 0 -6 0 8 -195568 -1 -1 0
+1;
+#X obj 300 350 tgl 25 0 empty empty empty 0 -6 0 8 -195568 -1 -1 0
+1;
+#X obj 381 346 tgl 25 0 empty empty empty 0 -6 0 8 -195568 -1 -1 0
+1;
+#X obj 64 266 route btn_0 btn_1 btn_2 btn_3 btn_4 btn_5 btn_6 btn_7
+btn_8 btn_9 btn_10 btn_11 btn_12 btn_13 btn_14 btn_15;
+#X obj 132 467 loadbang;
+#X msg 248 446 /joyButton \$2 \$1;
+#X obj 173 383 pack 0 5;
+#X obj 238 384 pack 0 6;
+#X obj 302 383 pack 0 7;
+#X obj 381 377 pack 0 9;
+#X obj 20 379 pack 0 0;
+#X obj 95 379 pack 0 1;
+#X msg 487 485 /joyAxis \$2 \$1;
+#X obj 452 440 pack 0 0;
+#X obj 512 439 pack 0 1;
+#X obj 569 439 pack 0 2;
+#X obj 452 343 expr (($f1/255) * 2) -1;
+#X obj 512 378 expr (($f1/255) * 2) -1;
+#X obj 569 408 expr (($f1/255) * 2) -1;
+#X obj 346 32 import mrpeach;
+#X msg 132 492 connect 127.0.0.1 57120;
+#X obj 130 541 sendOSC;
+#X obj 210 517 prepend send;
+#X connect 0 0 4 0;
+#X connect 1 0 4 0;
+#X connect 2 0 1 0;
+#X connect 3 0 4 0;
+#X connect 4 0 10 0;
+#X connect 5 0 4 0;
+#X connect 6 0 4 0;
+#X connect 7 0 4 0;
+#X connect 9 0 33 0;
+#X connect 10 0 20 0;
+#X connect 10 2 12 0;
+#X connect 11 0 27 0;
+#X connect 12 0 9 0;
+#X connect 12 1 13 0;
+#X connect 12 2 14 0;
+#X connect 13 0 31 0;
+#X connect 13 0 34 0;
+#X connect 14 0 32 0;
+#X connect 14 0 35 0;
+#X connect 15 0 28 0;
+#X connect 16 0 23 0;
+#X connect 17 0 24 0;
+#X connect 18 0 25 0;
+#X connect 19 0 26 0;
+#X connect 20 0 11 0;
+#X connect 20 1 15 0;
+#X connect 20 5 16 0;
+#X connect 20 6 17 0;
+#X connect 20 7 18 0;
+#X connect 20 9 19 0;
+#X connect 21 0 37 0;
+#X connect 22 0 39 0;
+#X connect 23 0 22 0;
+#X connect 24 0 22 0;
+#X connect 25 0 22 0;
+#X connect 26 0 22 0;
+#X connect 27 0 22 0;
+#X connect 28 0 22 0;
+#X connect 29 0 39 0;
+#X connect 30 0 29 0;
+#X connect 31 0 29 0;
+#X connect 32 0 29 0;
+#X connect 33 0 30 0;
+#X connect 34 0 31 0;
+#X connect 35 0 32 0;
+#X connect 37 0 38 0;
+#X connect 39 0 38 0;
