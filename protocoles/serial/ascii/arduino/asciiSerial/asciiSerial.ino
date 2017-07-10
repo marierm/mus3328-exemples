@@ -12,6 +12,9 @@ char messageSendState = 0;
 //***************************************
 //***************************************
 
+unsigned long previousMillis = 0;
+const long interval = 3;
+
 void setup() { 
   Serial.begin(115200);
   pinMode(3, OUTPUT);
@@ -30,13 +33,16 @@ void loop(){
     analogWrite(6, third_number);
   }
 
-  int sensor = analogRead(A0);
-  int sensor2 = analogRead(A1);
-  Serial.print(sensor);
-  Serial.print(" ");
-  Serial.println(sensor2);
+  unsigned long currentMillis = millis();
+  if (currentMillis - previousMillis >= interval) {
+    previousMillis = currentMillis;
 
-  delay(3);
+    int sensor = analogRead(A0);
+    int sensor2 = analogRead(A1);
+    Serial.print(sensor);
+    Serial.print(" ");
+    Serial.println(sensor2);
+  }
 }
 
 
