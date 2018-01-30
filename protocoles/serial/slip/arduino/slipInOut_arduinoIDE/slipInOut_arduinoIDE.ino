@@ -30,7 +30,7 @@ const long interval = 3;
 
 void setup() {
   Serial.begin(115200);
-  for( uint i=0 ; i < (sizeof(outPins)/sizeof(int)) ; i++) {
+  for( int i=0 ; i < (sizeof(outPins)/sizeof(int)) ; i++) {
     pinMode(outPins[i], OUTPUT); // Les outPins sont initialisées en OUTPUT.
   }
 }
