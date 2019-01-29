@@ -1,3 +1,7 @@
+#include "Thread.h"
+// On va utiliser un Thread pour lire les valeurs du capteur.  De cette façon,
+// on n'a pas besoin de delay (qui suspendrait aussi la réception des paquets SLIP).
+
 // Variables globales
 // Ces variables servent à l'encodage en SLIP.
 const byte END=192;
@@ -12,28 +16,39 @@ const int outPins[] = { 9, 10, 11 }; // Les pins utilisées en sortie (PWM).
 // paquet le plus grand attendu.
 byte slipPacket[256]; // Cet array contiendra le paquet SLIP reçu.
 
+Thread sensorReadingThread = Thread();  // Ce thread va lire le(s) capteur(s).
+
 void setup() {
   Serial.begin(115200);
   for( int i=0 ; i < (sizeof(outPins)/sizeof(int)) ; i++) {
     pinMode(outPins[i], OUTPUT); // Les outPins sont initialisées en OUTPUT.
   }
+  
+  sensorReadingThread.onRun(readSensor); // Le thread va exécuter la fonction readSensor...
+  sensorReadingThread.setInterval(3); // à toutes les 3 millisecondes.
 }
 
 void loop() {
+  if(sensorReadingThread.shouldRun()) { // On s'assure que le thread roule.
+    sensorReadingThread.run();
+  }
+  
   // Réception des paquets SLIP (sans aucun délai).
 	int packetSize = 0;
   int i;
-	int sensor = analogRead(sensorPin);
   packetSize = SLIPSerialRead( slipPacket );
   for (i=0 ; i < packetSize; i++) {
     analogWrite(outPins[i], slipPacket[i]);
   }
-	// On lit le capteur et on envoie un paquet SLIP.
+}
+
+void readSensor(){ // fonction exécutée par le Thread.
+  // On lit le capteur et on envoie un paquet SLIP.
+  int sensor = analogRead(sensorPin);
   Serial.write(END);   // On commence le paquet.
   SLIPSerialWrite( byte(sensor >> 8) );  // On envoie le MSB
   SLIPSerialWrite( byte(sensor & 255) ); // On envoie le LSB
   Serial.write(END);   // On termine le paquet.
-	delay(3);  // On attend un peu pour le port série et l'ADC. 
 }
 
 //Fonction pour encoder les paquets SLIP.
