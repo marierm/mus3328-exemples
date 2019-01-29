@@ -12,8 +12,8 @@ void loop() {
   int sensorA;
   int sensorB;
   // Lire les entrées analogiques et les envoyer sur le port série.
-  sensorA = analogRead(0);
-  sensorB = analogRead(1);
+  sensorA = analogRead(A0);
+  sensorB = analogRead(A1);
 
   SLIPSerialWrite(sensorA >> 8 ); // envoyer le MSB de l'octet 1.
   SLIPSerialWrite(sensorA & 255 ); // envoyer le LSB de l'octet 1.
