@@ -1,0 +1,60 @@
+#N canvas 186 76 888 565 12;
+#X text 188 147 comport opens the specified serial port at the specified
+baud rate when it the object is initialized \; using an invalid device
+prevents it from opening the port until requestd;
+#X obj 215 441 t a;
+#X obj 130 441 list prepend;
+#X obj 92 313 t f f;
+#X obj 130 481 spigot;
+#X obj 92 348 sel 10;
+#X obj 147 349 == 10;
+#X obj 92 387 t b b;
+#X obj 59 282 sel 13;
+#X text 125 282 ignore carriage-return characters;
+#X text 189 339 detect line-feed characters and trigger output of an
+accumulated list of input characters;
+#X text 243 442 list accumulator;
+#X text 239 511 object from moocow to parse a list of input characters
+into a Pd message;
+#X text 158 381 two bangs: one to emit complete list \, one to reset
+accumulator. Otherwise right outlet of sel just stores character.;
+#X text 180 480 enable list to be emitted only when complete;
+#X obj 130 516 moocow/bytes2any;
+#X text 126 240 The following graph buffers characters until a line
+is received then parses it as a Pd list.;
+#X obj 59 163 comport 1 115200;
+#X msg 242 57 devices;
+#X msg 242 108 close;
+#X obj 64 110 moocow/any2bytes 80 13;
+#X obj 428 93 pack 0 0 0;
+#X obj 410 12 hsl 128 15 0 127 0 0 empty empty empty -2 -8 0 10 -262144
+-1 -1 0 1;
+#X obj 446 35 hsl 128 15 0 127 0 0 empty empty empty -2 -8 0 10 -262144
+-1 -1 0 1;
+#X obj 478 59 hsl 128 15 0 127 0 0 empty empty empty -2 -8 0 10 -262144
+-1 -1 0 1;
+#X obj 402 71 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X connect 1 0 2 1;
+#X connect 2 0 1 0;
+#X connect 2 0 4 0;
+#X connect 3 0 5 0;
+#X connect 3 1 6 0;
+#X connect 4 0 15 0;
+#X connect 5 0 7 0;
+#X connect 5 1 2 0;
+#X connect 6 0 4 1;
+#X connect 7 0 2 1;
+#X connect 7 1 2 0;
+#X connect 8 1 3 0;
+#X connect 17 0 8 0;
+#X connect 18 0 17 0;
+#X connect 19 0 17 0;
+#X connect 20 0 17 0;
+#X connect 21 0 20 0;
+#X connect 22 0 21 0;
+#X connect 23 0 21 1;
+#X connect 23 0 25 0;
+#X connect 24 0 21 2;
+#X connect 24 0 25 0;
+#X connect 25 0 21 0;
