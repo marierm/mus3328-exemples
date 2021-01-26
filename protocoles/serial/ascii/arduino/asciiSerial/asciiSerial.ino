@@ -17,9 +17,9 @@ const long interval = 3;
 
 void setup() { 
   Serial.begin(115200);
-  pinMode(3, OUTPUT);
-  pinMode(5, OUTPUT);
-  pinMode(6, OUTPUT);
+  pinMode(9, OUTPUT);
+  pinMode(10, OUTPUT);
+  pinMode(11, OUTPUT);
 }
 
 void loop(){
@@ -28,9 +28,9 @@ void loop(){
     int second_number = messageGetInt();
     int third_number = messageGetInt();
     
-    analogWrite(3, first_number >> 2); 
-    analogWrite(5, second_number >> 2);
-    analogWrite(6, third_number);
+    analogWrite(9, first_number >> 2); 
+    analogWrite(10, second_number >> 2);
+    analogWrite(11, third_number >> 2);
   }
 
   unsigned long currentMillis = millis();
@@ -61,7 +61,6 @@ int messageBuild() {
         messageBufferIndex=0;
         messageState = 1;
         break;
-
     default:
       messageBuffer[messageBufferIndex]=messageBufferSerialByte;
       messageBufferIndex = messageBufferIndex + 1;
