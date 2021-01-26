@@ -9,7 +9,8 @@ const byte ESC=219;
 const byte ESC_END=220;
 const byte ESC_ESC=221;
 
-const int sensorPin = 0; //L'entrée analogique utilisée.
+const int sensorPinA = 0;
+const int sensorPinB = 1;
 const int outPins[] = { 9, 10, 11 }; // Les pins utilisées en sortie (PWM).
 
 // La taille maximum d'un paquet SLIP.  Ce nombre doit être plus grande que le
@@ -44,10 +45,13 @@ void loop() {
 
 void readSensor(){ // fonction exécutée par le Thread.
   // On lit le capteur et on envoie un paquet SLIP.
-  int sensor = analogRead(sensorPin);
+  int sensorA = analogRead(sensorPinA);
+  int sensorB = analogRead(sensorPinB);
   Serial.write(END);   // On commence le paquet.
-  SLIPSerialWrite( byte(sensor >> 8) );  // On envoie le MSB
-  SLIPSerialWrite( byte(sensor & 255) ); // On envoie le LSB
+  SLIPSerialWrite( byte(sensorA >> 8) );  // On envoie le MSB
+  SLIPSerialWrite( byte(sensorA & 255) ); // On envoie le LSB
+  SLIPSerialWrite( byte(sensorB >> 8) );  // On envoie le MSB
+  SLIPSerialWrite( byte(sensorB & 255) ); // On envoie le LSB 
   Serial.write(END);   // On termine le paquet.
 }
 

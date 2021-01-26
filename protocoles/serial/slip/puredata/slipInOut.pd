@@ -1,0 +1,65 @@
+#N canvas 680 82 967 667 10;
+#X obj 37 37 import mrpeach;
+#X text 236 132 115200 est le baud rate. Vous pourriez avoir à le
+changer également.;
+#X text 160 563 Décode les paquets SLIP et forme des listes. (Merci
+Monsieur Pêche!);
+#X obj 43 565 mrpeach/slipdec;
+#X msg 9 88 devices;
+#X text 154 35 Importer les objets de Monsieur Pêche. (PD-extended
+seulement).;
+#X text 19 70 Obtenir la liste des ports usb.;
+#X msg 172 178 close;
+#X text 220 179 Fermer le port.;
+#X obj 209 460 mrpeach/slipenc;
+#X obj 209 436 pack f f f;
+#X text 238 90 Ouvrir une connexion série. Le numéro ou le nom du
+port série utilisé sera sans doute différent pour vous. Remplacez
+4 par le numéro du port série que vous utilisez.;
+#X text 317 425 En utilisant le protocole SLIP \, envoyer trois valeurs
+entre 0 et 255 au port série.;
+#X obj 43 636 << 8;
+#X obj 55 664 |;
+#X floatatom 109 694 5 0 0 0 - - -;
+#X msg 181 99 open 5;
+#X obj 43 532 comport/comport 5 115200;
+#X obj 43 600 unpack f f f f;
+#X obj 109 668 |;
+#X floatatom 55 694 5 0 0 0 - - -;
+#X obj 97 634 << 8;
+#X obj 221 403 t b f;
+#X obj 260 403 t b f;
+#X obj 197 246 vsl 15 150 0 255 0 0 empty empty empty 0 -9 0 10 -262144
+-1 -1 0 1;
+#X obj 221 246 vsl 15 150 0 255 0 0 empty empty empty 0 -9 0 10 -262144
+-1 -1 0 1;
+#X obj 245 246 vsl 15 150 0 255 0 0 empty empty empty 0 -9 0 10 -262144
+-1 -1 0 1;
+#X obj 189 616 vsl 15 150 0 1023 0 0 empty empty empty 0 -9 0 10 -262144
+-1 -1 6234 1;
+#X obj 210 616 vsl 15 150 0 1023 0 0 empty empty empty 0 -9 0 10 -262144
+-1 -1 4865 1;
+#X connect 3 0 18 0;
+#X connect 4 0 17 0;
+#X connect 7 0 17 0;
+#X connect 9 0 17 0;
+#X connect 10 0 9 0;
+#X connect 13 0 14 0;
+#X connect 14 0 20 0;
+#X connect 15 0 28 0;
+#X connect 16 0 17 0;
+#X connect 17 0 3 0;
+#X connect 18 0 13 0;
+#X connect 18 1 14 1;
+#X connect 18 2 21 0;
+#X connect 18 3 19 1;
+#X connect 19 0 15 0;
+#X connect 20 0 27 0;
+#X connect 21 0 19 0;
+#X connect 22 0 10 0;
+#X connect 22 1 10 1;
+#X connect 23 0 10 0;
+#X connect 23 1 10 2;
+#X connect 24 0 10 0;
+#X connect 25 0 22 0;
+#X connect 26 0 23 0;

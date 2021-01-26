@@ -1,19 +1,19 @@
-#N canvas 532 178 1362 700 10;
+#N canvas 334 132 1362 700 10;
 #X obj 37 37 import mrpeach;
 #X obj 39 239 unpack f f f f;
 #X obj 23 288 << 8;
 #X obj 51 331 |;
-#X floatatom 51 420 5 0 0 0 - - -, f 5;
+#X floatatom 51 420 5 0 0 0 - - -;
 #X obj 93 290 << 8;
 #X obj 105 331 |;
-#X floatatom 105 420 5 0 0 0 - - -, f 5;
+#X floatatom 105 420 5 0 0 0 - - -;
 #X text 243 132 115200 est le baud rate. Vous pourriez avoir à le
 changer également.;
 #X text 160 179 Décode les paquets SLIP et forme des listes. (Merci
 Monsieur Pêche!);
 #X text 150 287 << 8 décale les bits vers la gauche de 8 positions.
 ;
-#X text 152 299 11 deviendra 1.1e+09 \, par exemple.;
+#X text 152 299 11 deviendra 1.1e+009 \, par exemple.;
 #X text 160 329 | est l'oérateur OU bit à bit.;
 #X text 183 371 768;
 #X text 243 371 |;
@@ -38,7 +38,8 @@ seulement).;
 #X text 964 42 Fermer le port.;
 #X text 164 257 Il faut combiner les LSB et les MSB pour obtenir les
 valeurs 10 bits.;
-#X obj 39 94 comport 4 115200;
+#X obj 39 94 comport 5 115200;
+#X msg 532 5 open 5;
 #X connect 1 0 2 0;
 #X connect 1 1 3 1;
 #X connect 1 2 5 0;
@@ -51,3 +52,4 @@ valeurs 10 bits.;
 #X connect 24 0 30 0;
 #X connect 27 0 30 0;
 #X connect 30 0 23 0;
+#X connect 31 0 30 0;

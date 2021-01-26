@@ -1,34 +1,35 @@
 // La classe SLIPSerial doit être installée dans le dossier Extensions de SC
 // Vous pouvez demander à SuperCollider où se trouve le dossier Extension sur votre système en évaluant:
 Platform.userExtensionDir;
-// Rebootez SuperCollider apès avoir ajouté le fichier au dossier
+// Redémarrez SuperCollider apès avoir ajouté le fichier au dossier
 
 SLIPSerial.listDevices; // Lister les périphériques série.
 
 
 // à utiliser avec slipInOut.ino
 (
-~port = SLIPSerial("/dev/ttyACM0",115200); // Changer le nom du port
+~port = SLIPSerial("COM5",115200); // Changer le nom du port
 										   // et le baudrate au besoin.
-
 // La fonction passée en paramètre à readSLIP est executée à chaque
 // paquet SLIP reçu.
-~port.readSLIP({|i| 
-	var val;
-	val = ((i[0] << 8) | i[1])  >> 2;
-	(val.asInteger ! 3).postln;
-	~port.writeSLIP( val.asInteger ! 3 );
+~port.readSLIP({|i|
+    var sensors=[];
+    i.pairsDo({
+        arg msb, lsb, i;
+        sensors = sensors.add(msb<<8 | lsb);
+    });
+    sensors.postln;
 });
 )
 
 // Fermer le port avant d'essayer l'exemple suivant.
 ~port.close;
 
-
 // Avec un petit GUI.
 (
-var window, sliders, port, sensor;
-port = SLIPSerial("/dev/ttyACM0",115200);
+var window, sliders, port, sensors;
+// port = SLIPSerial("/dev/ttyACM0",115200); // sous Linux, semblable sous Mac
+port = SLIPSerial("COM5",115200); // sous Windows
 window = Window("Exemple de communication en SLIP");
 sliders	= 3.collect({|i| Slider(bounds:100@10) });
 sliders.do({ |i|
@@ -38,11 +39,20 @@ sliders.do({ |i|
 		);
 	})
 });
-sensor = Slider(bounds:100@10);
+sensors = 2.collect({ |i| Slider(bounds:100@10); });
 
-port.readSLIP({|i| {sensor.valueAction_( ((i[0] << 8) | i[1]) / 1023)  }.defer; });
+port.readSLIP({|i|
+    var values=[];
+    i.pairsDo({
+        arg msb, lsb, i;
+        values = values.add(msb<<8 | lsb);
+        {sensors[i.div(2)].valueAction_( (msb<<8 | lsb) / 1023 ) }.defer;
+    });
 
-window.layout = VLayout( * sliders ++ 20 ++ sensor); 
+});
+
+
+window.layout = VLayout( * (sliders ++ 20 ++ sensors) );
 window.front;
 window.onClose_({port.close});
 );
