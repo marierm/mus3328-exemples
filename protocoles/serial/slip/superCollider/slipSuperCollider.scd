@@ -3,25 +3,31 @@
 Platform.userExtensionDir;
 // Redémarrez SuperCollider apès avoir ajouté le fichier au dossier
 
-SLIPSerial.listDevices; // Lister les périphériques série.
+// Idem pour la classe BusPlot.
 
+SLIPSerial.listDevices; // Lister les périphériques série.
+s.boot;
+~bus = Bus.control(s,2); // Bus deux canaux.
 
 // à utiliser avec slipInOut.ino
 (
-~port = SLIPSerial("COM5",115200); // Changer le nom du port
-										   // et le baudrate au besoin.
-// La fonction passée en paramètre à readSLIP est executée à chaque
+~port = SLIPSerial("COM5",115200);
+
 // paquet SLIP reçu.
-~port.readSLIP({|i|
+~port.readSLIP({
+    arg slipPacket;
     var sensors=[];
-    i.pairsDo({
+    slipPacket.pairsDo({ // [msbA, lsbA, msbB, lsbB]
         arg msb, lsb, i;
         sensors = sensors.add(msb<<8 | lsb);
     });
     sensors.postln;
+    ~bus.set(*sensors); // l'astériques sort les items du tableau. équivalent à:
+    // ~bus.set(sensors[0], sensors[1]);
 });
 )
 
+BusPlot(~bus);
 // Fermer le port avant d'essayer l'exemple suivant.
 ~port.close;
 
