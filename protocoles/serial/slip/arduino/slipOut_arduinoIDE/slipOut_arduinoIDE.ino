@@ -27,7 +27,7 @@ void loop() {
 }
 
 // Fonction 
-void SLIPSerialWrite(int value){
+void SLIPSerialWrite(int value){ 
   if(value == END){ 
     Serial.write(ESC);
     Serial.write(ESC_END);
@@ -41,4 +41,3 @@ void SLIPSerialWrite(int value){
     return;
   }
 }
-
