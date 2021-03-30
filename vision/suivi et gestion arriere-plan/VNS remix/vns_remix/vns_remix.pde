@@ -5,7 +5,7 @@
  * Quantify the amount of movement in the video frame using frame-differencing.
  */ 
 
-
+// Installer les bibliothèques (libraries) oscP5, video.
 import processing.video.*;
 import oscP5.*;
 import netP5.*;
@@ -21,11 +21,15 @@ void setup() {
   size(640, 480);
   
   oscP5 = new OscP5(this,12000);
-  myRemoteLocation = new NetAddress("127.0.0.1",13000);
+  myRemoteLocation = new NetAddress("127.0.0.1",55554);
+    String[] cameras = Capture.list();
   
   // This the default video input, see the GettingStartedCapture 
   // example if it creates an error
-  video = new Capture(this, width, height);
+  //video = new Capture(this, 160, 120);
+  printArray(Capture.list());
+  video = new Capture(this, cameras[1]);
+  
   
   // Start capturing the images from the camera
   video.start(); 

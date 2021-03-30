@@ -23,15 +23,17 @@ int[][] lastPresenceSum = new int[nbCol][nbRow];
 Capture video;
 
 void setup() {
-  size(640, 480); 
+  size(640, 480);
   
   oscP5 = new OscP5(this,12000);
-  myRemoteLocation = new NetAddress("127.0.0.1",13000);
+  myRemoteLocation = new NetAddress("127.0.0.1",55555);
+  String[] cameras = Capture.list();
   
   // This the default video input, see the GettingStartedCapture 
   // example if it creates an error
   //video = new Capture(this, 160, 120);
-  video = new Capture(this, width, height);
+  printArray(Capture.list());
+  video = new Capture(this, cameras[1]);
   
   // Start capturing the images from the camera
   video.start();  
@@ -85,7 +87,7 @@ void draw() {
       //pixels[i] = 0xFF000000 | (diffR << 16) | (diffG << 8) | diffB;
     }
     updatePixels(); // Notify that the pixels[] array has changed
-    println(presenceSum[0][0]); // Print out the total amount of movement
+    // println(presenceSum[0][0]); // Print out the total amount of movement
     
     
   }
@@ -96,29 +98,30 @@ void draw() {
     for(int j=0; j<nbRow; j++) {
       //threshold en luminance par carré du laucnhpad
       if(presenceSum[i][j] > presenceThresh) {
-        fill(255, 255, 0, 25);
-        //on envoi un message osc seulement si le statut du carré a changé 
-        if(presenceSum[i][j] != lastPresenceSum[i][j]) {
+        if(lastPresenceSum[i][j] <= presenceThresh) {
+          fill(255, 255, 0, 25);
+          //on envoi un message osc seulement si le statut du carré a changé
+          // if(presenceSum[i][j] != lastPresenceSum[i][j]) {
           OscMessage myMessage = new OscMessage("/trig");
           myMessage.add(i); 
           myMessage.add(j); 
           myMessage.add(1); 
-          oscP5.send(myMessage, myRemoteLocation); 
+          oscP5.send(myMessage, myRemoteLocation);
         }
-        lastPresenceSum[i][j] = presenceSum[i][j];
       } else {
+        if (lastPresenceSum[i][j] > presenceThresh) {
         noFill();
         //idem
-       if(presenceSum[i][j] != lastPresenceSum[i][j]) {
+       // if(presenceSum[i][j] != lastPresenceSum[i][j]) {
           OscMessage myMessage = new OscMessage("/trig");
           myMessage.add(i); 
           myMessage.add(j); 
           myMessage.add(0); 
-          oscP5.send(myMessage, myRemoteLocation); 
+          oscP5.send(myMessage, myRemoteLocation);
         }
-        lastPresenceSum[i][j] = presenceSum[i][j];
       }
       rect(i*(width/nbCol), j*(height/nbRow), width/nbCol, height/nbRow);
+      lastPresenceSum[i][j] = presenceSum[i][j];
     }
   }
 }
