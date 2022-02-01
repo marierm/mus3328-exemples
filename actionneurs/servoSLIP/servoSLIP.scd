@@ -1,8 +1,8 @@
-p = SLIPSerial("COM5", 115200);
+p = SLIPSerial("COM8", 115200);
 
-p.writeSLIP([180]);
-
+p.writeSLIP([90]);
 p.writeSLIP([0]);
+
 
 
 (
