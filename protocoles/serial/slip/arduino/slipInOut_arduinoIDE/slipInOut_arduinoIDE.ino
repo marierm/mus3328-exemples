@@ -9,6 +9,7 @@ const int sensorPinA = 0;
 const int sensorPinB = 1;
 const int outPins[] = { 9, 10, 11 }; // Les pins utilisées en sortie (PWM).
 
+
 // La taille maximum d'un paquet SLIP.  Ce nombre doit être plus grande que le
 // paquet le plus grand attendu.
 byte slipPacket[256]; // Cet array contiendra le paquet SLIP reçu.
@@ -23,11 +24,10 @@ void setup() {
 void loop() {
   // Réception des paquets SLIP (sans aucun délai).
 	int packetSize = 0;
-  int i;
 	int sensorA = analogRead(sensorPinA);
   int sensorB = analogRead(sensorPinB);
   packetSize = SLIPSerialRead( slipPacket );
-  for (i=0 ; i < packetSize; i++) {
+  for (int i=0 ; i < packetSize; i++) {
     analogWrite(outPins[i], slipPacket[i]);
   }
 	// On lit le capteur et on envoie un paquet SLIP.

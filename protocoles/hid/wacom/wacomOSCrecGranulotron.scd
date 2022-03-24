@@ -1,18 +1,18 @@
 // Reçoit les messages OSC envoyés du patch wacom.pd
 
 // Démarrer le serveur SC.
-Server.default.boot;					// ou s.boot;
+Server.default.boot;	// ou s.boot;
 
 // Exécuter toute la parenthèse qui suit.
 (
 // Les noms des messages OSC qu'on recevra.
-~oscBasePath = "/tablet/";
-~oscMsgNames = [\posx, \posy, \tiltx, \tilty, \press, \dist, \touch, \btn1, \btn2];
+~oscBasePath = "/";
+~oscMsgNames = [\x, \y, \p, \tx, \ty, \prox, \touch];
 // Les maximums de chacunes des valeurs reçues.
 // C'est pour normaliser les valeurs entre 0 et 1.
-~maxVals = [25400, 20320, 127, 127, 1023, 55, 1, 1, 1];
-// ~maxVals = [1, 1, 1, 1, 1, 1, 1, 1, 1];
-
+// ~maxVals = [25400, 20320, 127, 127, 1023, 55, 1, 1, 1];
+~maxVals = [1, 1, 1, 1, 1, 1, 1];
+~minVals = [-1, -1, 0, -1, -1, 0, 0];
 // On crée des bus de control.
 ~ctlBuses = ();
 
@@ -24,7 +24,7 @@ Server.default.boot;					// ou s.boot;
 
 (
 // Créer un array de OSCdefs (pour répondre aux messages OSC)
-~oscDefs = ~oscMsgNames.collect({|name, index|
+~oscMsgNames.collect({|name, index|
 	// On crée un OSCdef pour répondre à chaque message OSC.
 	OSCdef(
 		name,
@@ -32,13 +32,13 @@ Server.default.boot;					// ou s.boot;
 			var normVal;
 			// msg[1] contient la valeur.
 			// .linlin normalise entre 0 et 1.
-			normVal = msg[1].linlin(0, ~maxVals[index], 0.0, 1.0);
-			~ctlBuses[name].set(normVal);	// Pour l'instant, on attribue
+            normVal = msg[1].linlin(~minVals[index], ~maxVals[index], 0.0, 1.0);
+            ~ctlBuses[name].set(normVal);	// Pour l'instant, on attribue
 											// simplement la valeur au bus de
 											// contrôle.
 
 			// Pour imprimer les valeurs (déboguer):
-			// name.post; ": ".post;normVal.postln;
+            // name.post; ": ".post;normVal.postln;
 		},
 		~oscBasePath ++ name, // Créer le path OSC en concaténant.
 		recvPort: 9050
@@ -90,7 +90,7 @@ w.front;
 SynthDef(\granulotron, {
 	arg out=0, bufL=0, bufR=1, pan=0, rate=1, amp=1, centerPos=0.5,
 	granFreq=15, granDur=0.2, gate=1, att=0.2, rel=0.01;
-	
+
 	var trig;
 	trig = Impulse.ar(granFreq);
 	Out.ar(out,
@@ -117,11 +117,11 @@ SynthDef(\granulotron, {
 (
 ~map = (
 	\pan: [nil, ControlSpec(-1, 1, \linear, 0.0, 0, "")], // pas de pan
-	\rate: [\posy, ControlSpec(0.125, 8, \exp, 0, 1, "")],
-	\amp: [\press, ControlSpec(0, 4, \amp, 0.0, 0, "")],
-	\centerPos: [\posx, ControlSpec()],
-	\granFreq: [\tiltx, ControlSpec(0.5, 800, \exp, 0.0, 0.2)],
-	\granDur: [\tilty, ControlSpec(0.001, 1.0, 4, 0.0, 0.2)]
+	\rate: [\y, ControlSpec(0.125, 8, \exp, 0, 1, "")],
+	\amp: [\p, ControlSpec(0, 4, \amp, 0.0, 0, "")],
+	\centerPos: [\x, ControlSpec()],
+	\granFreq: [\tx, ControlSpec(0.5, 800, \exp, 0.0, 0.2)],
+	\granDur: [\ty, ControlSpec(0.001, 1.0, 4, 0.0, 0.2)]
 );
 
 
@@ -153,44 +153,50 @@ SynthDef(\granulotron, {
 )
 
 (
+~isTouching = 0;
 // Toucher la tablette démarre un granulotron.
 OSCdef(
-	\touch,
+	\pressureBinary,
 	{|msg|
-		msg[1].asInteger.switch(
-			1,
-			{
-				~granulotron.isPlaying.not.if({
-					~granulotron = Synth.tail(
-						Server.default,
-						\granulotron, [
-							\bufL, ~buffers[4][0],
-							\bufR, ~buffers[4][1]
-						]
-					);
-					~granulotron.map(
-						\rate, ~ctlBuses[\rate],
-						\amp, ~ctlBuses[\amp],
-						\centerPos, ~ctlBuses[\centerPos],
-						\granFreq, ~ctlBuses[\granFreq],
-						\granDur, ~ctlBuses[\granDur],
-					);
-					NodeWatcher.register(~granulotron, true);
-				})
-			},
-			0, {
-				~granulotron.isPlaying.if({
-					~granulotron.set(\gate, 0)
-				});
-			}
-		)
-	}
+        (~isTouching !=   (msg[1] > 0.0).asInteger).if({
+            ~isTouching = (msg[1] > 0.0).asInteger;
+            ~isTouching.switch(
+                1,
+                {
+                    ~granulotron.isPlaying.not.if({
+                        ~granulotron = Synth.tail(
+                            Server.default,
+                            \granulotron, [
+                                \bufL, ~buffers[4][0],
+                                \bufR, ~buffers[4][1]
+                            ]
+                        );
+                        ~granulotron.map(
+                            \rate, ~ctlBuses[\rate],
+                            \amp, ~ctlBuses[\amp],
+                            \centerPos, ~ctlBuses[\centerPos],
+                            \granFreq, ~ctlBuses[\granFreq],
+                            \granDur, ~ctlBuses[\granDur],
+                        );
+                        NodeWatcher.register(~granulotron, true);
+                    })
+                },
+                0, {
+                    ~granulotron.isPlaying.if({
+                        ~granulotron.set(\gate, 0)
+                    });
+                }
+            )
+
+        });
+
+    }, "/p", recvPort:9050
 );
 )
 
 // Un peu de ménage.
 (
-~oscDefs.do(_.free);
+OSCdef.freeAll;
 ~ctlBuses.do(_.free);
 ~buffers.do({|i| i.do(_.free)});
 ~scaleSynths.do(_.free);

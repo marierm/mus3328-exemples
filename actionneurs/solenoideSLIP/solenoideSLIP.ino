@@ -1,7 +1,7 @@
 // Variables globales
 // Ces variables servent à l'encodage en SLIP.
 const byte END=192;
-const byte ESC=219; 
+const byte ESC=219;
 const byte ESC_END=220;
 const byte ESC_ESC=221;
 

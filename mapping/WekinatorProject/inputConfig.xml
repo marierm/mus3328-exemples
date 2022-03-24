@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<OSCInputGroup>
+  <oscMessage>/imu</oscMessage>
+  <numInputs>3</numInputs>
+  <groupName>Inputs</groupName>
+  <inputNames>
+    <string>accX</string>
+    <string>accY</string>
+    <string>accZ</string>
+  </inputNames>
+</OSCInputGroup>

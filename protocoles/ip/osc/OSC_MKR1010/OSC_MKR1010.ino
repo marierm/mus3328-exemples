@@ -15,12 +15,15 @@ int status = WL_IDLE_STATUS;
 //char ssid[] = "fpTubeRouter-2.4";        // your network SSID (name)
 //char pass[] = "=OKI/*$9-W";    // your network password (use for WPA, or use as key for WEP)
 
-const char ssid[] = "WirelessBouc";
-const char pass[] = "JuBnu22a";
+// const char ssid[] = "WirelessBouc";
+// const char pass[] = "JuBnu22a";
+
+const char ssid[] = "spot";
+const char pass[] = "superspot";
 
 
 WiFiUDP udp;
-const IPAddress outIp(192,168,1,255); // remote IP of your computer
+const IPAddress outIp(192,168,137,255); // remote IP of your computer
 const unsigned int outPort = 57120; // remote port to receive OSC
 const unsigned int localPort = 50505; // local port to listen for OSC packets
 

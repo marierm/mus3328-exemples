@@ -4,12 +4,12 @@
 
 // Variables globales
 // Ces variables servent à l'encodage en SLIP.
-const byte END=192;
-const byte ESC=219; 
-const byte ESC_END=220;
-const byte ESC_ESC=221;
+const byte END = 192;
+const byte ESC = 219;
+const byte ESC_END = 220;
+const byte ESC_ESC = 221;
 
-byte slipPacket[256]; // Cet array contiendra le paquet SLIP reçu.
+byte slipPacket[1024]; // Cet array contiendra le paquet SLIP reçu.
 
 #include <Adafruit_NeoPixel.h>
 
@@ -17,7 +17,7 @@ byte slipPacket[256]; // Cet array contiendra le paquet SLIP reçu.
 #define PIN        6 // On Trinket or Gemma, suggest changing this to 1
 
 // How many NeoPixels are attached to the Arduino?
-#define NUMPIXELS 10 // Popular NeoPixel ring size
+#define NUMPIXELS 120 // Popular NeoPixel ring size
 
 // When setting up the NeoPixel library, we tell it how many pixels,
 // and which pin to use to send signals. Note that for older NeoPixel
@@ -32,24 +32,29 @@ void setup() {
 }
 
 void loop() {
-  // Réception des paquets SLIP.  
+  // Réception des paquets SLIP.
   int packetSize = 0;
-  packetSize = SLIPSerialRead( slipPacket ); // [ r, g, b, w, r, g, b, w, ..... ]
-  // On attend 4 x NUMPIXELS items dans le paquet:
-  // R, G, B, W pour chaque pixel.
+  packetSize = SLIPSerialRead( slipPacket ); // [ id, r, g, b, w ]
+  // On attend 3 x NUMPIXELS items dans le paquet:
+  // R, G, B pour chaque pixel.
+  
   if (packetSize > 0) {
-    for (int  i=0; i < packetSize ; i=i+4){ // i=0, i=4, i=8, ....
-      pixels.setPixelColor(i/4, pixels.Color(slipPacket[i], slipPacket[i+1], slipPacket[i+2], slipPacket[i+3]) );
+    for (int  i = 0; i < NUMPIXELS ; i = i + 3) { // i=0, i=20, i=40, ....
+      for (int j = 0; j < 3 ; j = j + 1 ) {
+        int id;
+        id = i + (j*3);
+        pixels.setPixelColor(i, pixels.Color(slipPacket[id], slipPacket[id+1], slipPacket[id+2], 0) ); // 12, 13, 14, 15
+      };
     };
     pixels.show();   // Send the updated pixel colors to the hardware.
-    delay(20);
+    //    delay(20);
   };
 }
 
 // Fonction pour recevoir et décoder les paquets SLIP.
 // Retourne la taille du paquet SLIP.
 // Prend un paramètre: le tableau (array) d'octets (bytes) qui contiendra le paquet SLIP.
-int SLIPSerialRead(byte * slipPacket) { 
+int SLIPSerialRead(byte * slipPacket) {
   int packetIndex = 0;  // L'index du paquet SLIP reçu.  Cette valeur sera
   // incrémentée à chaque octet reçu.  Elle sera remise à
   // zéro quand un paquet SLIP sera complet.
@@ -69,8 +74,8 @@ int SLIPSerialRead(byte * slipPacket) {
   }
 
   // S'il y a quelque chose, on attend un paquet complet.
-  while( !packetComplete ) {
-    if( Serial.available() > 0) {
+  while ( !packetComplete ) {
+    if ( Serial.available() > 0) {
       byte b = Serial.read();
       if (escape) { // Si l'octet précédent était ESC (219)
         if (b == ESC_END) {  // On ajoute END (192)...
@@ -78,7 +83,7 @@ int SLIPSerialRead(byte * slipPacket) {
         } else if (b == ESC_ESC) { // ...ou ESC (219)
           slipPacket[packetIndex] = ESC;
         }
-        packetIndex++;  
+        packetIndex++;
         escape = 0; // On remet le témoin escape à faux.
       } else if (b == END) { // Le paquet est terminé.
         packetComplete = true;  // Le témoin packetComplete est maintenant vrai.
